@@ -24,17 +24,17 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 8,
+  "id": 1,
   "links": [
     {
       "icon": "external link",
-      "tags": [
-        "Juneo"
-      ],
+      "includeVars": true,
+      "keepTime": true,
+      "tags": ["Juneo"],
       "type": "dashboards"
     }
   ],
-  "liveNow": false,
+  "liveNow": true,
   "panels": [
     {
       "datasource": {
@@ -100,14 +100,10 @@
         "x": 0,
         "y": 0
       },
-      "id": 21,
+      "id": 15,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
+          "calcs": ["min", "mean", "max"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -125,22 +121,10 @@
             "uid": "${node}"
           },
           "exemplar": true,
-          "expr": "round(increase(juneomcn_P_blks_accepted_count{job=\"juneogo\"}[1m]))>0",
+          "expr": "round(increase(juneomcn_snowman_blks_accepted_count{chain=\"P\", job=\"juneogo\"}[1m]))>0",
           "interval": "",
-          "legendFormat": "Accepted",
+          "legendFormat": "Blocks {{node_id}}",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "round(increase(juneomcn_P_blks_acc_count{job=\"juneogo\"}[1m]))>0",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "B"
         }
       ],
       "title": "Accepted Blocks in Last Minute",
@@ -193,6 +177,10 @@
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           },
@@ -206,14 +194,10 @@
         "x": 12,
         "y": 0
       },
-      "id": 15,
+      "id": 20,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
+          "calcs": ["min", "mean", "max"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -230,10 +214,12 @@
             "type": "prometheus",
             "uid": "${node}"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "round(increase(juneomcn_P_blks_rejected_count{job=\"juneogo\"}[1m]))>0",
+          "expr": "round(increase(juneomcn_snowman_blks_rejected_count{chain=\"P\", job=\"juneogo\"}[1m]))>0",
           "interval": "",
-          "legendFormat": "Rejected",
+          "legendFormat": "Blocks {{node_id}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -282,6 +268,7 @@
             }
           },
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -301,14 +288,10 @@
         "x": 0,
         "y": 8
       },
-      "id": 23,
+      "id": 22,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
+          "calcs": ["min", "mean", "max"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -325,7 +308,7 @@
             "type": "prometheus",
             "uid": "${node}"
           },
-          "expr": "rate(juneomcn_P_blks_accepted_sum{job=\"juneogo\"}[5m]) / rate(juneomcn_P_blks_accepted_count{job=\"juneogo\"}[5m])",
+          "expr": "rate(juneomcn_snowman_blks_accepted_sum{chain=\"P\", job=\"juneogo\"}[5m]) / rate(juneomcn_snowman_blks_accepted_count{chain=\"P\", job=\"juneogo\"}[5m])",
           "interval": "",
           "legendFormat": "Avg Acceptance Latency",
           "refId": "A"
@@ -366,13 +349,13 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": false,
             "stacking": {
               "group": "A",
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "line+area"
+              "mode": "off"
             }
           },
           "mappings": [],
@@ -380,8 +363,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent",
+                "color": "green",
                 "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           },
@@ -395,14 +382,10 @@
         "x": 12,
         "y": 8
       },
-      "id": 25,
+      "id": 23,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
+          "calcs": ["min", "mean", "max"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -419,10 +402,9 @@
             "type": "prometheus",
             "uid": "${node}"
           },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_blks_rejected_sum{job=\"juneogo\"}[5m]) / rate(juneomcn_P_blks_rejected_count{job=\"juneogo\"}[5m])",
+          "expr": "rate(juneomcn_snowman_blks_rejected_sum{chain=\"P\", job=\"juneogo\"}[5m]) / rate(juneomcn_snowman_blks_rejected_count{chain=\"P\", job=\"juneogo\"}[5m])",
           "interval": "",
-          "legendFormat": "Rejection Latency",
+          "legendFormat": "Avg Rejection Latency",
           "refId": "A"
         }
       ],
@@ -445,22 +427,22 @@
             "axisLabel": "Transactions",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "smooth",
+            "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": false,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -470,17 +452,12 @@
             }
           },
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "transparent",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 500
               }
             ]
           },
@@ -497,110 +474,7 @@
       "id": 9,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.4",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "expr": "juneomcn_P_blks_processing{job=\"juneogo\"}",
-          "interval": "",
-          "legendFormat": "Transactions",
-          "refId": "A"
-        }
-      ],
-      "title": "Processing Blocks",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${node}"
-      },
-      "description": "Percentage of queries for which we receive chits on time.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "transparent",
-                "value": 0.85
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 16
-      },
-      "id": 11,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "min"
-          ],
+          "calcs": ["mean", "max"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -618,14 +492,103 @@
             "uid": "${node}"
           },
           "exemplar": true,
-          "expr": "(increase(juneomcn_P_handler_chits_count{job=\"juneogo\"}[5m]) + 1) / (increase(juneomcn_P_handler_chits_count{job=\"juneogo\"}[5m]) + increase(juneomcn_P_handler_query_failed_count{job=\"juneogo\"}[5m]) + 1)",
-          "instant": false,
+          "expr": "juneomcn_snowman_blks_processing{chain=\"P\", job=\"juneogo\"}>0",
           "interval": "",
-          "legendFormat": "% Successful",
+          "legendFormat": "Blocks {{node_id}}",
           "refId": "A"
         }
       ],
-      "title": "Percentage of Successful Queries",
+      "title": "Processing Blocks",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${node}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Incomplete Polls",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 39,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max"],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${node}"
+          },
+          "exemplar": true,
+          "expr": "juneomcn_snowman_polls{chain=\"P\"} > 0",
+          "interval": "",
+          "legendFormat": "Polls {{node_id}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Incomplete Polls",
       "type": "timeseries"
     },
     {
@@ -642,7 +605,7 @@
           "custom": {
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "seconds/second",
+            "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -696,10 +659,7 @@
       "id": 5,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
+          "calcs": ["mean", "max"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true
@@ -717,9 +677,104 @@
             "uid": "${node}"
           },
           "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_pull_query_sum{job=\"juneogo\"}[5m])",
+          "expr": "rate(juneomcn_handler_message_handling_time{chain=\"P\", job=\"juneogo\"}[5m])",
           "interval": "",
-          "legendFormat": "pull query",
+          "legendFormat": "{{ op }} {{node_id}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Message Handling Time (Total)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${node}"
+      },
+      "description": "Percentage of queries for which we receive chits on time.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "transparent",
+                "value": 0.8
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": ["min", "mean", "max"],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${node}"
+          },
+          "expr": "max(increase(juneomcn_handler_messages{chain=\"P\", op=\"chits\", job=\"juneogo\"}[5m]))",
+          "hide": true,
           "refId": "A"
         },
         {
@@ -727,172 +782,21 @@
             "type": "prometheus",
             "uid": "${node}"
           },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_push_query_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "push query",
+          "expr": "max(increase(juneomcn_handler_messages{chain=\"P\", op=\"query_failed\", job=\"juneogo\"}[5m]))",
+          "hide": true,
           "refId": "B"
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
+            "name": "Expression",
+            "type": "__expr__"
           },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_chits_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_accepted_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "accepted",
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "E"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_put_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "F"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_multiput_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "G"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_ancestors_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "H"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_failed_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get failed",
-          "refId": "I"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_query_failed_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "query failed",
-          "refId": "J"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_accepted_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "K"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_ancestors_failed_sum{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors failed",
-          "refId": "L"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_request_sum{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request ",
-          "refId": "N"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_request_failed_sum{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request failed ",
-          "refId": "M"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_response_sum{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "O"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_gossip_sum{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "P"
+          "expression": "($A + 1) / ($A + $B + 1)",
+          "refId": "% Successful",
+          "type": "math"
         }
       ],
-      "title": "Message Handling Time (Total)",
+      "title": "Percentage of Successful Queries",
       "type": "timeseries"
     },
     {
@@ -909,7 +813,7 @@
           "custom": {
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "seconds",
+            "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -958,17 +862,14 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 32
       },
       "id": 7,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
+          "calcs": ["mean", "max"],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -984,9 +885,103 @@
             "uid": "${node}"
           },
           "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_pull_query_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_pull_query_count{job=\"juneogo\"}[5m])",
+          "expr": "rate(juneomcn_handler_message_handling_time{chain=\"P\", job=\"juneogo\"}[5m])/rate(juneomcn_handler_messages{chain=\"P\", job=\"juneogo\"}[5m])",
           "interval": "",
-          "legendFormat": "pull query",
+          "legendFormat": "{{ op }} {{node_id}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Message Handling Time (per Message)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${node}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 33
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${node}"
+          },
+          "exemplar": true,
+          "expr": "juneomcn_handler_sync_unprocessed_msgs_count{chain=\"P\"}",
+          "interval": "",
+          "legendFormat": "{{ op }}",
           "refId": "A"
         },
         {
@@ -995,171 +990,107 @@
             "uid": "${node}"
           },
           "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_push_query_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_push_query_count{job=\"juneogo\"}[5m])",
+          "expr": "juneomcn_handler_async_unprocessed_msgs_count{chain=\"P\"}",
           "interval": "",
-          "legendFormat": "push query",
+          "legendFormat": "{{ op }}",
           "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_chits_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_chits_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_accepted_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_accepted_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "accepted",
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_get_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "E"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_put_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_put_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "F"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_multiput_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_multi_put_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "G"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_ancestors_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_get_ancestors_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "H"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_failed_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_get_failed_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get failed",
-          "refId": "I"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_query_failed_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_query_failed_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "query failed",
-          "refId": "J"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_accepted_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_get_accepted_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "K"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_ancestors_failed_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_get_ancestors_failed_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors failed",
-          "refId": "L"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_request_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_app_request_count{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "M"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_request_failed_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_app_request_failed_count{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request failed",
-          "refId": "N"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_gossip_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_app_gossip_count{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "O"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_response_sum{job=\"juneogo\"}[5m])/rate(juneomcn_P_handler_app_response_count{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "P"
         }
       ],
-      "title": "Message Handling Time (per Message)",
+      "title": "Unprocessed Incoming Messages",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${node}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 33
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${node}"
+          },
+          "exemplar": true,
+          "expr": "increase(juneomcn_handler_expired{chain=\"P\", job=\"juneogo\"}[1m]) or 0 * up",
+          "interval": "",
+          "legendFormat": "{{ op }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Incoming Messages Expired in Last Minute",
       "type": "timeseries"
     },
     {
@@ -1209,7 +1140,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1225,16 +1157,12 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 41
       },
-      "id": 29,
+      "id": 25,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
+          "calcs": ["mean", "max"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -1252,9 +1180,9 @@
             "uid": "${node}"
           },
           "exemplar": true,
-          "expr": "avg_over_time(juneomcn_P_benchlist_benched_weight{job=\"juneogo\"}[15m]) / 10^9",
+          "expr": "avg_over_time(juneomcn_benchlist_benched_weight{chain=\"P\", job=\"juneogo\"}[15m]) / 10^9",
           "interval": "",
-          "legendFormat": "JUNE Benched",
+          "legendFormat": "JUNE Benched {{node_id}}",
           "refId": "A"
         }
       ],
@@ -1275,7 +1203,7 @@
           "custom": {
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "Messages received/s",
+            "axisLabel": "Messages / Second",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -1307,7 +1235,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1323,17 +1252,14 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 33
+        "y": 41
       },
       "id": 6,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
+          "calcs": ["mean", "max"],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -1349,482 +1275,25 @@
             "uid": "${node}"
           },
           "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_pull_query_count{job=\"juneogo\"}[5m])",
+          "expr": "rate(juneomcn_handler_messages{chain=\"P\", job=\"juneogo\"}[5m])",
           "interval": "",
-          "legendFormat": "pull query",
+          "legendFormat": "{{ op }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_push_query_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_chits_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_accepted_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "accepted",
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "E"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_put_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "F"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_multi_put_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "G"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_ancestors_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "H"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_failed_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get failed",
-          "refId": "I"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_query_failed_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "query failed",
-          "refId": "J"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_accepted_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "K"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_get_ancestors_failed_count{job=\"juneogo\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors failed",
-          "refId": "L"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_request_count{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "P"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_request_failed_count{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request failed",
-          "refId": "M"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_response_count{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "N"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "rate(juneomcn_P_handler_app_gossip_count{job=\"juneogo\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "O"
         }
       ],
       "title": "Messages Received per Second",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${node}"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 1,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 42
-      },
-      "id": 35,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "increase(juneomcn_P_vm_block_cache_hit[5m])/(increase(juneomcn_P_vm_block_cache_hit[5m])+increase(juneomcn_P_vm_block_cache_miss[5m]))",
-          "interval": "",
-          "legendFormat": "Hit Rate",
-          "refId": "A"
-        }
-      ],
-      "title": "Block Cache Hit Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${node}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 50
-      },
-      "id": 19,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.5",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "exemplar": true,
-          "expr": "juneomcn_P_handler_unprocessed_msgs_len",
-          "interval": "",
-          "legendFormat": "Pending Messages",
-          "refId": "A"
-        }
-      ],
-      "title": "Unprocessed Incoming Messages",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${node}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 50
-      },
-      "id": 33,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.1.4",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${node}"
-          },
-          "expr": "increase(juneomcn_P_handler_expired[1m])",
-          "interval": "",
-          "legendFormat": "Expired",
-          "refId": "A"
-        }
-      ],
-      "title": "Incoming Messages Expired in Last Minute",
-      "type": "timeseries"
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 38,
+  "schemaVersion": 37,
   "style": "dark",
-  "tags": [
-    "Juneo"
-  ],
+  "tags": ["Juneo"],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "socotra1-contabo-1-node",
-          "value": "socotra1-contabo-1-node"
+          "selected": false
         },
         "hide": 0,
         "includeAll": false,
@@ -1841,7 +1310,7 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -1859,8 +1328,8 @@
     ]
   },
   "timezone": "",
-  "title": "P-Chain New",
-  "uid": "uWlS20i7z2",
-  "version": 1,
+  "title": "P-Chain",
+  "uid": "uWlS20i7z",
+  "version": 52,
   "weekStart": ""
 }
